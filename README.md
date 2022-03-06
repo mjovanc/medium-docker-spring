@@ -6,4 +6,4 @@ Blog application with Spring Boot, PostgreSQL and Hibernate and Docker/Docker Co
 
 ## More about
 
-Read the article on Medium: 
+Read the article on Medium: https://mjovanc.com/get-started-with-docker-and-docker-compose-cddcb5a3f3b9
