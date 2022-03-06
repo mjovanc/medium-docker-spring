@@ -1,0 +1,71 @@
+version: '3.7'
+  docker-compose up --scale qryptic-api=0
+services:
+  spring:
+    build: .
+    container_name: blog-api
+    environment:
+      POSTGRESQL_HOSTNAME: postgres
+      POSTGRESQL_PORT: 5432
+      POSTGRESQL_DB_NAME: qryptic_dev
+      POSTGRESQL_DB_USER: postgres
+      POSTGRESQL_DB_PASSWORD: test1234
+      # KEYCLOAK_HOSTNAME: keycloak
+      # KEYCLOAK_PORT: 11111
+      # This below is optional if you need to specify a specific Spring Boot profile to use
+      # JAVA_OPTS: '-Dspring.profiles.active=dev'
+    ports:
+      - "8080:8080"
+    links:
+      - postgres
+      # - keycloak
+    depends_on:
+      - postgres
+    networks:
+      - blog-net
+
+  postgres:
+    image: postgres
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: qryptic_dev
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: test1234
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - blog-net
+
+#  keycloak:
+#    image: jboss/keycloak
+#    container_name: keycloak
+#    restart: always
+#    environment:
+#      DB_VENDOR: h2
+#      KEYCLOAK_USER: admin
+#      KEYCLOAK_PASSWORD: password
+#      PROXY_ADDRESS_FORWARDING: "true"
+#    volumes:
+#      - keycloak:/var/lib/keycloak/data
+#      - ./keycloak/realm-export.json:/opt/jboss/keycloak/realm-export.json
+#    expose:
+#      - 11111
+#    ports:
+#      - "11111:11111"
+#    command:
+#      - "-b 0.0.0.0"
+#      - "-Djboss.http.port=11111"
+#      - "-Dkeycloak.import=/opt/jboss/keycloak/realm-export.json"
+#    networks:
+#      - blog-net
+
+volumes:
+  postgres:
+  # keycloak:
+
+networks:
+  blog-net:
+    driver: bridge
